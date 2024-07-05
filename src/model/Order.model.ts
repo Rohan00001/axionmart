@@ -1,7 +1,8 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface Order extends Document {
-    orderItems: string[];
+    itemId: string;
+    orderItem: string;
     shippingAddress: string;
     paymentMethod: string;
     itemPrice: number;
@@ -14,8 +15,12 @@ export interface Order extends Document {
 }
 
 const OrderSchema: Schema<Order> = new mongoose.Schema({
-    orderItems: {
-        type: [String],
+    itemId: {
+        type: String,
+        required: true,
+    },
+    orderItem: {
+        type: String,
         required: true,
     },
     shippingAddress: {
@@ -41,6 +46,7 @@ const OrderSchema: Schema<Order> = new mongoose.Schema({
     orderStatus: {
         type: String,
         required: true,
+        default: "Pending",
     },
     paidAt: {
         type: Date,

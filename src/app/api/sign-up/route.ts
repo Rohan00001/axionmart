@@ -12,17 +12,17 @@ export async function POST(request: Request) {
         const existingUserByUsername = await UserModel.findOne({ username });
 
         if (existingUserByUsername) {
-            return {
+            return Response.json({
                 status: 409,
                 body: { message: 'Username already exists' }
-            }
+            });
         }
 
         if (password.length < 8) {
-            return {
+            return Response.json({
                 status: 400,
                 body: { message: 'Password must be at least 8 characters' }
-            }
+            });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);

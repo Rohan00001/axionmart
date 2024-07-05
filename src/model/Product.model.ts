@@ -10,7 +10,7 @@ export interface Product extends Document {
     listedOn: Date;
     productStatus: string;
     productRating?: number;
-    reviews: string[];
+    reviews?: string[];
 }
 
 const ProductSchema: Schema<Product> = new mongoose.Schema({
@@ -41,7 +41,6 @@ const ProductSchema: Schema<Product> = new mongoose.Schema({
     },
     listedOn: {
         type: Date,
-        required: true,
         default: Date.now,
     },
     productStatus: {
