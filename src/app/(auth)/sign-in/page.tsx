@@ -17,6 +17,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { signInSchema } from '@/schemas/signInSchema';
 import { useState } from 'react';
 import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 
 export default function SignInForm() {
     const [isButtonLoading, setIsButtonLoading] = useState(false);
@@ -40,7 +41,19 @@ export default function SignInForm() {
 
             console.log(response.data);
 
-            // router.push('/');
+            if (response.data.success) {
+                toast({
+                    title: 'Sign in successful',
+                    description: 'You have successfully signed in',
+                });
+                router.push('/');
+            } else {
+                toast({
+                    title: 'Sign in failed',
+                    description: response.data.message,
+                    variant: 'destructive'
+                });
+            }
 
         } catch (error) {
             toast({
@@ -87,16 +100,16 @@ export default function SignInForm() {
                                 </FormItem>
                             )}
                         />
-                        {
-                            isButtonLoading ? (
-                                <Button className='w-full' disabled>
-                                    Signing in...
-                                </Button>
+                        <Button type="submit" className='w-full' disabled={isButtonLoading}>
+                            {isButtonLoading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Please wait
+                                </>
                             ) : (
-                                <Button className='w-full' type="submit">Sign in</Button>
-
-                            )
-                        }
+                                'Sign Up'
+                            )}
+                        </Button>
                     </form>
                 </Form>
                 <div className="text-center mt-4">
