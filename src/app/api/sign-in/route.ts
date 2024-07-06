@@ -31,62 +31,55 @@ const generateAccessToken = async (username: string): Promise<any> => {
 export async function POST(request: Request) {
     await dbConnect();
     try {
-        const { username, password } = await request.json();
+        const { identifier, password } = await request.json();
 
-        const existingUser = await UserModel.findOne({ username });
+
+        const existingUser = await UserModel.findOne({
+            $or: [
+                { username: identifier },
+                { email: identifier }
+            ]
+        });
 
         if (!existingUser) {
-            return Response.json(
-                {
-                    success: false,
-                    message: 'User not found',
-                },
-                { status: 404 }
-            );
+            return new Response(JSON.stringify({
+                success: false,
+                message: "User not found"
+            }), { status: 404 })
         }
 
         const isPasswordValid = await bcrypt.compare(password, existingUser.password);
 
         if (!isPasswordValid) {
-            return Response.json(
-                {
-                    success: false,
-                    message: 'Invalid password',
-                },
-                { status: 401 }
-            );
+            return new Response(JSON.stringify({
+                success: false,
+                message: "Invalid password"
+            }), { status: 401 })
         }
 
-        const { success, accessToken, status } = await generateAccessToken(username);
+        const { success, accessToken, status } = await generateAccessToken(identifier);
 
         if (!success) {
-            return Response.json(
-                {
-                    success: false,
-                    message: 'Internal server error',
-                },
-                { status: 500 }
-            );
+            return new Response(JSON.stringify({
+                success: false,
+                message: "Error generating access token"
+            }), { status: 500 })
         }
 
         cookies().set('accessToken', accessToken);
-        return Response.json(
-            {
-                success: true,
-                message: 'User signed in successfully',
-                accessToken,
-            },
-            { status }
+        return new Response(JSON.stringify({
+            success: true,
+            message: "Sign in successful",
+        }), { status: status }
+
         );
     }
     catch (error) {
         console.error('Error signing in:', error);
-        return Response.json(
-            {
-                success: false,
-                message: 'Internal server error',
-            },
-            { status: 500 }
+        return new Response(JSON.stringify({
+            success: false,
+            message: "Error signing in"
+        }), { status: 500 }
         );
     }
 }
