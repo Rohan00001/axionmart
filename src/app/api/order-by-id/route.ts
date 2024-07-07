@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/lib/dbConnect';
 import OrderModel from '@/model/Order.model';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function (request: Request) {
     await dbConnect();
 
     try {
-        const { id } = req.query;
+        const { id } = new URL(request.url);
         if (typeof id !== 'string') {
             return res.status(400).json({
                 success: false,
