@@ -1,57 +1,48 @@
-// import dbConnect from "@/lib/dbConnect";
-// import OrderModel from "@/model/Order.model";
+import dbConnect from "@/lib/dbConnect";
+import OrderModel from "@/model/Order.model";
 
-// export async function POST(request: Request) {
-//     await dbConnect();
+export async function POST(request: Request) {
+    await dbConnect();
 
-//     try {
-//         const { itemId, orderItem, shippingAddress, paymentMethod, itemPrice, shippingPrice, totalPrice, orderStatus, paidAt, deliveredAt, user } = await request.json();
-//         console.log(itemId, orderItem, shippingAddress, paymentMethod, itemPrice, shippingPrice, totalPrice, orderStatus, paidAt, deliveredAt, user)
+    try {
+        const { itemId, orderItem, shippingAddress, paymentMethod, itemPrice, shippingPrice, totalPrice, orderStatus, paidAt, deliveredAt, user } = await request.json();
+        console.log(itemId, orderItem, shippingAddress, paymentMethod, itemPrice, shippingPrice, totalPrice, orderStatus, paidAt, deliveredAt, user)
 
-//         const order = new OrderModel({
-//             itemId,
-//             orderItem,
-//             shippingAddress,
-//             paymentMethod,
-//             itemPrice,
-//             shippingPrice,
-//             totalPrice,
-//             orderStatus,
-//             paidAt,
-//             deliveredAt,
-//             user,
-//         });
+        const order = new OrderModel({
+            itemId,
+            orderItem,
+            shippingAddress,
+            paymentMethod,
+            itemPrice,
+            shippingPrice,
+            totalPrice,
+            orderStatus,
+            paidAt,
+            deliveredAt,
+            user,
+        });
 
-//         await order.save();
+        await order.save();
 
-//         const createdOrder = await OrderModel.findOne({ itemId });
+        const createdOrder = await OrderModel.findOne({ itemId });
 
-//         if (!order) {
-//             return Response.json(
-//                 {
-//                     success: false,
-//                     message: 'Order Creation failed',
-//                 },
-//                 { status: 500 }
-//             );
-//         }
+        if (!order) {
+            return new Response(JSON.stringify({
+                success: false,
+                message: "Error registering order"
+            }), { status: 500 })
+        }
 
-//         return Response.json(
-//             {
-//                 success: true,
-//                 message: 'Order registered successfully',
-//                 order: createdOrder,
-//             },
-//             { status: 201 }
-//         );
+        return new Response(JSON.stringify({
+            success: true,
+            message: "Order registered successfully",
+            order: createdOrder
+        }), { status: 200 })
 
-//     } catch (error) {
-//         return Response.json(
-//             {
-//                 success: false,
-//                 message: 'Order Creation failed',
-//             },
-//             { status: 500 }
-//         );
-//     }
-// }
+    } catch (error) {
+        return new Response(JSON.stringify({
+            success: false,
+            message: "Error while registering order"
+        }), { status: 500 })
+    }
+}

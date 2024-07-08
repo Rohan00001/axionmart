@@ -14,6 +14,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Footer from "@/components/Footer";
 
 interface CardDetails {
   image: string;
@@ -217,9 +218,7 @@ export default function Home() {
         </Carousel>
       </div>
 
-      <footer className="flex items-center justify-center w-full px-6 py-4 bg-[#111416] rounded-t-2xl">
-        <p className="text-secondary-foreground">© 2022 Axionmart. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div >
   );
 }
