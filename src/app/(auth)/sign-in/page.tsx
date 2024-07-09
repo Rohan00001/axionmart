@@ -39,18 +39,18 @@ export default function SignInForm() {
                 { withCredentials: true }
             );
 
-            console.log(response.data);
+            console.log(response);
 
             if (response.data.success) {
                 toast({
                     title: 'Sign in successful',
                     description: 'You have successfully signed in',
                 });
-                router.push('/');
+                router.push('/home');
             } else {
                 toast({
                     title: 'Sign in failed',
-                    description: response.data.message,
+                    description: 'Invalid username or password',
                     variant: 'destructive'
                 });
             }
@@ -58,7 +58,7 @@ export default function SignInForm() {
         } catch (error) {
             toast({
                 title: 'Sign in failed',
-                description: 'An unexpected error occurred',
+                description: 'Invalid username or password',
                 variant: 'destructive'
             });
 

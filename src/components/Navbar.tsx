@@ -102,6 +102,9 @@ function Navbar() {
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Settings</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href="/create-new-product">Create Product</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Logout</DropdownMenuItem>

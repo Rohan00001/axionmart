@@ -1,15 +1,26 @@
+import dbConnect from "@/lib/dbConnect";
+import { userDetailsFromToken } from "@/lib/userDetailsFromToken";
 import ProductModel from "@/model/Product.model";
 
 export async function POST(request: Request) {
+    await dbConnect();
     try {
+        const userDetails = await userDetailsFromToken();
+
         const {
             productName,
             productPrice,
             productDescription,
             productImage,
             productCategory,
-            listedBy,
         } = await request.json();
+
+        if (!userDetails) {
+            return Response.json({
+                status: 401,
+                body: { message: 'Unauthorized please login first' }
+            });
+        }
 
         const newProduct = new ProductModel({
             productName,
@@ -17,7 +28,7 @@ export async function POST(request: Request) {
             productDescription,
             productImage,
             productCategory,
-            listedBy,
+            listedBy: userDetails?._id || '',
             productRating: 0,
             reviews: [],
         });

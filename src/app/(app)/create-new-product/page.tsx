@@ -25,9 +25,15 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createProductSchema>>({
     resolver: zodResolver(createProductSchema),
@@ -40,10 +46,35 @@ function Page() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof createProductSchema>) {
-    // setIsSubmitting(true);
-    console.log(values);
-    // setIsSubmitting(false);
+  async function onSubmit(values: z.infer<typeof createProductSchema>) {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post('/api/create-product', values);
+
+      if (response.data.status === 201) {
+        toast({
+          title: 'Product created successfully',
+          description: 'You have successfully created a new product'
+        });
+        router.push('/home');
+      } else {
+        toast({
+          title: 'Product creation failed',
+          description: 'An error occurred while creating the product',
+          variant: 'destructive'
+        });
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Product creation failed',
+        description: 'An unexpected error occurred',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
 
