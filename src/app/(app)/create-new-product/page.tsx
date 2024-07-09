@@ -50,8 +50,9 @@ function Page() {
     setIsSubmitting(true);
     try {
       const response = await axios.post('/api/create-product', values);
+      console.log(response.data);
 
-      if (response.data.status === 201) {
+      if (response.data.success) {
         toast({
           title: 'Product created successfully',
           description: 'You have successfully created a new product'

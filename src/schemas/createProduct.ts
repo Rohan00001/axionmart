@@ -6,7 +6,11 @@ export const createProductSchema = z.object({
     }),
     productPrice: z.string().min(2, {
         message: "Product price must be at greater then 50.",
-    }),
+    }).
+        regex(/^[0-9]*\.?[0-9]+$/, {
+            message: "Product price must be a number.",
+        })
+    ,
     productDescription: z.string().min(10, {
         message: "Product description must be at least 10 characters.",
     }),

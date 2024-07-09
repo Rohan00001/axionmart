@@ -16,34 +16,38 @@ export async function POST(request: Request) {
         } = await request.json();
 
         if (!userDetails) {
-            return Response.json({
-                status: 401,
-                body: { message: 'Unauthorized please login first' }
-            });
+            return new Response(JSON.stringify({
+                success: false,
+                message: "Unauthorized"
+            }), { status: 401 });
         }
 
         const newProduct = new ProductModel({
             productName,
             productPrice,
             productDescription,
+            listedBy: userDetails?._id || '',
             productImage,
             productCategory,
-            listedBy: userDetails?._id || '',
+            listedOn: new Date(),
+            productStatus: 'Available',
             productRating: 0,
             reviews: [],
         });
 
         await newProduct.save();
 
-        return Response.json({
-            status: 201,
-            body: { message: 'Product created successfully' }
-        });
+        return new Response(JSON.stringify({
+            success: true,
+            message: "Product created successfully",
+            product: newProduct
+        }), { status: 200 });
     }
     catch (error) {
-        return Response.json({
-            status: 500,
-            body: { message: 'Internal server error' }
-        });
+        console.log(error);
+        return new Response(JSON.stringify({
+            success: false,
+            message: "Internal server error"
+        }), { status: 500 });
     }
 }
