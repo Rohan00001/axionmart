@@ -25,10 +25,13 @@ function Navbar() {
                         </div>
                     </Link>
                     <Link
-                        href="/catagories"
-                        className={`${pathName == '/catagories' ? "text-white" : ""} text-muted-foreground transition-colors hover:text-foreground`}
+                        href="/categories/clothing"
+                        className={`${pathName == '/categories/clothing' ? "text-white" : ""} text-muted-foreground transition-colors hover:text-foreground`}
+                        passHref
                     >
-                        Catagories
+                        <p>
+                            Clothing
+                        </p>
                     </Link>
                     <Link
                         href="/orders"
