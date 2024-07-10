@@ -1,3 +1,4 @@
+"use client";
 import { CircleUser, Menu, Package2, Search } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -6,13 +7,15 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 function Navbar() {
+    const pathName = usePathname()
+
     return (
         <div>
             <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
                 <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-
                     <Link
                         href="/home"
                         className="text-foreground transition-colors hover:text-foreground"
@@ -22,20 +25,20 @@ function Navbar() {
                         </div>
                     </Link>
                     <Link
-                        href="#"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
+                        href="/catagories"
+                        className={`${pathName == '/catagories' ? "text-white" : ""} text-muted-foreground transition-colors hover:text-foreground`}
                     >
                         Catagories
                     </Link>
                     <Link
-                        href="#"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
+                        href="/orders"
+                        className={`${pathName == '/orders' ? "text-white" : ""} text-muted-foreground transition-colors hover:text-foreground`}
                     >
                         Orders
                     </Link>
                     <Link
-                        href="#"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
+                        href="/your-products"
+                        className={`${pathName == '/your-products' ? "text-white" : ""} text-muted-foreground transition-colors hover:text-foreground`}
                     >
                         Your Products
                     </Link>
@@ -62,17 +65,17 @@ function Navbar() {
                                     <Image src="/logo.png" width={60} height={60} alt="Logo" />
                                 </div>
                             </Link>
-                            <Link href="#" className="hover:text-foreground">
+                            <Link href="/catagories" className="hover:text-foreground">
                                 Catagories
                             </Link>
                             <Link
-                                href="#"
+                                href="/orders"
                                 className="text-muted-foreground hover:text-foreground"
                             >
                                 Orders
                             </Link>
                             <Link
-                                href="#"
+                                href="/your-products"
                                 className="text-muted-foreground hover:text-foreground"
                             >
                                 Your Products
