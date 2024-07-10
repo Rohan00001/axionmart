@@ -68,7 +68,7 @@ function Navbar() {
                                     <Image src="/logo.png" width={60} height={60} alt="Logo" />
                                 </div>
                             </Link>
-                            <Link href="/catagories" className="hover:text-foreground">
+                            <Link href="/categories/clothing" className="hover:text-foreground">
                                 Catagories
                             </Link>
                             <Link
@@ -97,6 +97,10 @@ function Navbar() {
                             />
                         </div>
                     </form>
+                    <Link href="/cart" className="flex items-center gap-2">
+                        <Package2 className="h-6 w-6" />
+                        <span className="hidden md:inline">Cart</span>
+                    </Link>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="secondary" size="icon" className="rounded-full">
