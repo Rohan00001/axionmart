@@ -38,7 +38,7 @@ function ProductCard({ product }: ProductCardProps) {
 					title: 'Product added to cart',
 					description: 'Product added to cart successfully',
 				})
-				router.push(`/add-to-cart/${product._id}`);
+				router.push(`/cart`);
 			} else {
 				toast({
 					title: 'Product not added to cart',

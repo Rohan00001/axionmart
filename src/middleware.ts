@@ -1,29 +1,22 @@
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from "next/headers";
-import { userDetailsFromToken } from './lib/userDetailsFromToken';
-
-// Define the UserDetails interface to type the decoded token
-interface UserDetails {
-    userId: string;
-    username: string;
-    // Add other properties as needed
-}
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     const cookieStore = cookies();
     const accessTokenCookie = cookieStore.get('accessToken');
 
-    console.log(accessTokenCookie);
+    // console.log(accessTokenCookie);
 
     let tokenIsAccessible = false;
 
     if (accessTokenCookie) {
         try {
-            const decodedToken = jwt.verify(accessTokenCookie.value, process.env.ACCESS_TOKEN_SECRET!) as jwt.JwtPayload & UserDetails;
-            console.log(decodedToken);
-            tokenIsAccessible = !!decodedToken;
+            const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET);
+            const { payload } = await jwtVerify(accessTokenCookie.value, secret);
+            // console.log(payload);
+            tokenIsAccessible = !!payload;
         } catch (error) {
             console.log('Error verifying token:', error);
         }
@@ -43,7 +36,7 @@ export async function middleware(request: NextRequest) {
     if (tokenIsAccessible && (
         url.pathname.startsWith('/sign-in') ||
         url.pathname.startsWith('/sign-up') ||
-        url.pathname.startsWith('/')
+        url.pathname === '/'
     )) {
         return NextResponse.redirect(new URL('/home', request.url));
     }

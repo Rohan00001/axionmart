@@ -38,7 +38,7 @@ const CartSchema: Schema<Cart> = new mongoose.Schema({
     },
 });
 
-const CartModel = mongoose.models.Order as mongoose.Model<Cart>
-    || mongoose.model<Cart>("Cart", CartSchema);
+// Check if the model already exists before defining it again
+const CartModel = mongoose.models.Cart as mongoose.Model<Cart> || mongoose.model<Cart>("Cart", CartSchema);
 
 export default CartModel;

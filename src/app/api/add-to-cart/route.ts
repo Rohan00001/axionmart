@@ -1,16 +1,14 @@
 import dbConnect from "@/lib/dbConnect";
 import { userDetailsFromToken } from "@/lib/userDetailsFromToken";
-import CartModel, { Cart } from "@/model/Cart.model";
+import CartModel from "@/model/Cart.model";
 import ProductModel from "@/model/Product.model";
-
 
 export async function POST(request: Request) {
     await dbConnect();
     try {
         const { productId } = await request.json();
-        // console.log(productId);
 
-        // Find the product form the database
+        // Find the product from the database
         const product = await ProductModel.findOne({ _id: productId });
 
         if (!product) {
@@ -22,13 +20,20 @@ export async function POST(request: Request) {
             });
         }
 
-        //Get the User details from the token
-
+        // Get the User details from the token
         const userDetails = await userDetailsFromToken();
 
-        // Create a new cart object
+        if (!userDetails) {
+            return new Response(JSON.stringify({
+                success: false,
+                message: 'User not found'
+            }), {
+                status: 404,
+            });
+        }
 
-        const cart: Cart = new CartModel({
+        // Create a new cart object
+        const cart = new CartModel({
             productId: product._id,
             productName: product.productName,
             productPrice: product.productPrice,
@@ -38,7 +43,6 @@ export async function POST(request: Request) {
         });
 
         // Save the cart object to the database
-
         await cart.save();
 
         // Return a response
