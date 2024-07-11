@@ -30,7 +30,7 @@ function Navbar() {
                         passHref
                     >
                         <p>
-                            Clothing
+                            Categories
                         </p>
                     </Link>
                     <Link

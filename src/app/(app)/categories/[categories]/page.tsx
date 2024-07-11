@@ -5,11 +5,9 @@ import SideCategoryBar from '@/components/SideCategoryBar';
 import { Product } from '@/Interface/ProductInterface';
 import axios from 'axios';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 function Page({ params }: any) {
-    const router = useRouter();
     const category = params.categories;
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -24,7 +22,6 @@ function Page({ params }: any) {
                     setProducts(res.data.products);
                     setLoading(false);
                 }, 2000);
-                console.log(res.data.products);
             } catch (error) {
                 console.log(error);
                 setLoading(false);

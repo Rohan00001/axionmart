@@ -1,27 +1,38 @@
-// import ProductModel from "@/model/Product.model";
+import dbConnect from "@/lib/dbConnect";
+import ProductModel from "@/model/Product.model";
 
-// export async function GET(request: Request) {
-//     try {
-//         const { productId } = await request.json();
-//         const product = await ProductModel
-//             .findOne({ _id: productId });
 
-//         if (!product) {
-//             return Response.json({
-//                 status: 404,
-//                 body: { message: 'Product not found' }
-//             });
-//         }
+export async function POST(request: Request) {
+    await dbConnect();
+    try {
+        const { productId } = await request.json();
+        console.log(productId);
+        const product = await ProductModel
+            .findOne({ _id: productId });
 
-//         return Response.json({
-//             status: 200,
-//             body: { product }
-//         });
-//     }
-//     catch (error) {
-//         return Response.json({
-//             status: 500,
-//             body: { message: 'Internal server error' }
-//         });
-//     }
-// }
+        if (!product) {
+            return new Response(JSON.stringify({
+                success: false,
+                message: 'Product not found'
+            }), {
+                status: 404,
+
+            });
+        }
+
+        return new Response(JSON.stringify({
+            success: true,
+            body: product
+        }), {
+            status: 200,
+        });
+    }
+    catch (error) {
+        return new Response(JSON.stringify({
+            success: false,
+            message: 'Internal server error'
+        }), {
+            status: 500,
+        });
+    }
+}

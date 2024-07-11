@@ -24,12 +24,12 @@ function Page() {
 
     return (
         <div>
-            // Product Sales Carousal
+            {/* // Product Sales Carousal */}
             <div className='w-full flex items-center justify-center m-5'>
                 <HomePageCarousal />
             </div>
 
-            // Product Cards
+            {/* // Product Cards */}
             <div className='flex flex-wrap gap-4 m-5'>
                 {products.map((product) => (
                     <ProductCard key={product._id} product={product} />
