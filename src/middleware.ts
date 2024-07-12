@@ -27,7 +27,9 @@ export async function middleware(request: NextRequest) {
     // Redirect if no access token and trying to access protected routes
     if (!tokenIsAccessible && (
         url.pathname.startsWith('/home') ||
-        url.pathname.startsWith('/create-new-product')
+        url.pathname.startsWith('/create-new-product') ||
+        url.pathname.startsWith('/cart') ||
+        url.pathname.startsWith('/categories')
     )) {
         return NextResponse.redirect(new URL('/', request.url));
     }
@@ -40,6 +42,9 @@ export async function middleware(request: NextRequest) {
     )) {
         return NextResponse.redirect(new URL('/home', request.url));
     }
+
+    // Allow the request to proceed if none of the conditions above are met
+    return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
@@ -50,6 +55,7 @@ export const config = {
         '/sign-up',
         '/home',
         '/create-new-product',
-        // '/verify/:path*'
+        '/cart',
+        '/categories/:path*',
     ]
 };

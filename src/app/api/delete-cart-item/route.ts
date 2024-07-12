@@ -1,34 +1,35 @@
 import CartModel from "@/model/Cart.model";
 import dbConnect from "@/lib/dbConnect";
-import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function DELETE(request: NextApiRequest, response: NextApiResponse) {
+export async function DELETE(request: Request) {
     await dbConnect();
-    console.log("Before try");
-    try {
-        const { data } = request.body;
-        const cartId = data.cartId;
 
-        // Handle deletion based on cartId
+    try {
+        const { cartId } = await request.json();
+
         const cart = await CartModel.findByIdAndDelete(cartId);
 
         if (!cart) {
-            return response.status(404).json({
+            return new Response(JSON.stringify({
                 success: false,
-                message: 'Product not found'
+                message: "Cart item not found",
+            }), {
+                status: 404,
             });
         }
 
-        return response.status(200).json({
+        return new Response(JSON.stringify({
             success: true,
-            body: cart
+            message: "Cart item deleted successfully",
+        }), {
+            status: 200,
         });
-    }
-    catch (error) {
-        console.error("Error:", error);
-        return response.status(500).json({
+    } catch (error) {
+        return new Response(JSON.stringify({
             success: false,
-            message: 'Internal server error'
+            message: "Internal server error",
+        }), {
+            status: 500,
         });
     }
 }
