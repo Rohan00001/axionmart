@@ -17,7 +17,7 @@ function Page({ params }: any) {
         const fetchData = async (): Promise<void> => {
             try {
                 setLoading(true);
-                const res = await axios.get(`/api/get-user-by-category?category=${category}`);
+                const res = await axios.get(`/api/get-product-by-category?category=${category}`);
                 setTimeout(() => {
                     setProducts(res.data.products);
                     setLoading(false);
