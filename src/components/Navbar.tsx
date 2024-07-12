@@ -7,10 +7,31 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import axios from 'axios';
+import { useToast } from './ui/use-toast';
 
 function Navbar() {
     const pathName = usePathname()
+    const { toast } = useToast()
+
+    const logoutFunc = async () => {
+        try {
+            const response = await axios.post('/api/sign-out')
+            if (response.data.success) {
+                toast({
+                    title: 'Success',
+                    description: 'User signed out successfully',
+                })
+                setTimeout(() => {
+                    window.location.href = '/'
+                }, 2000)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div>
@@ -117,7 +138,9 @@ function Navbar() {
                             </DropdownMenuItem>
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={logoutFunc}
+                            >Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
