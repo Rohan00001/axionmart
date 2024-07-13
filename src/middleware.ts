@@ -30,7 +30,8 @@ export async function middleware(request: NextRequest) {
         url.pathname.startsWith('/create-new-product') ||
         url.pathname.startsWith('/cart') ||
         url.pathname.startsWith('/categories') ||
-        url.pathname.startsWith('/checkout')
+        url.pathname.startsWith('/checkout') ||
+        url.pathname.startsWith('/orders')
     )) {
         return NextResponse.redirect(new URL('/', request.url));
     }
@@ -58,6 +59,7 @@ export const config = {
         '/create-new-product',
         '/cart',
         '/categories/:path*',
-        '/checkout'
+        '/checkout',
+        '/orders',
     ]
 };

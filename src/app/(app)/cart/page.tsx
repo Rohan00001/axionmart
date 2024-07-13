@@ -74,7 +74,6 @@ function Page() {
             try {
                 const res = await axios.get('/api/get-cart');
                 setCarts(res.data.body);
-                console.log(res.data.body);
             } catch (error) {
                 console.log(error);
                 toast({

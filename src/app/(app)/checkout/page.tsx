@@ -21,6 +21,8 @@ import {
 import { Label } from '@/components/ui/label';
 import addressSchema from '@/schemas/addressSchema';
 import { checkout } from '@/checkout';
+import { Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
 // Define the CartItem interface
 interface CartItem {
@@ -64,6 +66,19 @@ function Page() {
                 carts,
 
             });
+            if (res.data.body === 'success') {
+                toast({
+                    title: 'Success',
+                    description: 'Order created successfully',
+
+                });
+            } else {
+                toast({
+                    title: 'Error while creating order',
+                    description: 'An error occurred while creating the order',
+                    variant: 'destructive',
+                });
+            }
         } catch (error) {
             console.log(error);
             toast({
@@ -76,12 +91,7 @@ function Page() {
             setClickInSubmit(false);
             router.push('/orders');
         }
-        // checkout(
-        //     {
-        //         lineItems: [{ price: "price_1PbqylSDxZ4Y853IQusxF4XF", quantity: 1 }],
 
-        //     }
-        // )
     };
 
     useEffect(() => {
@@ -241,9 +251,21 @@ function Page() {
                                             <div className='my-6 flex w-full justify-center'>
                                                 <Button
                                                     type="submit"
-                                                    className="bg-green-500 text-white my-10 px-6 py-2 rounded-lg hover:bg-green-700 transition">
-                                                    {
+                                                    className="bg-green-500 text-white my-10 px-6 py-2 rounded-lg hover:bg-green-700 transition"
+                                                    disabled={clickInSubmit}
+                                                >
 
+                                                    {
+                                                        clickInSubmit ?
+                                                            <>
+                                                                <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                                                                Processing...
+                                                            </> :
+                                                            <>
+                                                                <Link href="https://buy.stripe.com/test_eVa3eMgTQ2hV7ao9AB" target='_blank' >
+                                                                    <p>Place Order</p>
+                                                                </Link>
+                                                            </>
                                                     }
                                                 </Button>
                                             </div>
