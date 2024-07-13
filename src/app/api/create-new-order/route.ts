@@ -25,7 +25,7 @@ export async function POST(request: Request) {
             totalPrice: (item.productPrice * item.productQty + 50.00).toFixed(2), // Example calculation
         }));
 
-        const newOrder = new OrderModel<Order>({
+        const newOrder = new OrderModel({
             items: formattedItems,
             shippingAddress: address,
             paymentMethod: "Online",

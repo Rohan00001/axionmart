@@ -37,6 +37,8 @@ function Page() {
     const [carts, setCarts] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const [clickInSubmit, setClickInSubmit] = useState(false);
+
     const { toast } = useToast();
     const router = useRouter();
 
@@ -55,7 +57,7 @@ function Page() {
     const payment = async (data: FormSchema) => {
         console.log(JSON.stringify(data, null, 2));
         const address = JSON.stringify(data, null, 2);
-
+        setClickInSubmit(true);
         try {
             const res = await axios.post('/api/create-new-order', {
                 address,
@@ -69,7 +71,10 @@ function Page() {
                 description: 'An error occurred while creating the order',
                 variant: 'destructive',
             });
-
+        }
+        finally {
+            setClickInSubmit(false);
+            router.push('/orders');
         }
         // checkout(
         //     {
@@ -237,7 +242,9 @@ function Page() {
                                                 <Button
                                                     type="submit"
                                                     className="bg-green-500 text-white my-10 px-6 py-2 rounded-lg hover:bg-green-700 transition">
-                                                    Complete the Payment
+                                                    {
+
+                                                    }
                                                 </Button>
                                             </div>
                                         </form>
