@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Label } from '@/components/ui/label';
 import addressSchema from '@/schemas/addressSchema';
+import { checkout } from '@/checkout';
 
 // Define the CartItem interface
 interface CartItem {
@@ -47,11 +48,35 @@ function Page() {
             city: '',
             state: '',
             pincode: '',
+            mobileNo: '',
         },
     });
 
     const payment = async (data: FormSchema) => {
-        console.log(data);
+        console.log(JSON.stringify(data, null, 2));
+        const address = JSON.stringify(data, null, 2);
+
+        try {
+            const res = await axios.post('/api/create-new-order', {
+                address,
+                carts,
+
+            });
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: 'Error',
+                description: 'An error occurred while creating the order',
+                variant: 'destructive',
+            });
+
+        }
+        // checkout(
+        //     {
+        //         lineItems: [{ price: "price_1PbqylSDxZ4Y853IQusxF4XF", quantity: 1 }],
+
+        //     }
+        // )
     };
 
     useEffect(() => {
@@ -59,6 +84,7 @@ function Page() {
             try {
                 const res = await axios.get('/api/get-cart');
                 setCarts(res.data.body);
+                console.log(res.data.body);
             } catch (error) {
                 console.log(error);
                 toast({
@@ -75,7 +101,7 @@ function Page() {
 
     const totalAmount = carts.reduce((total, cart) => total + (cart.productPrice * cart.productQty), 0);
     const gst = totalAmount * 0.18;
-    const shipping = 50.00;
+    const shipping = 50.00 * carts.length;
     const discount = gst;
     const grandTotal = totalAmount + gst + shipping - discount;
 
@@ -186,6 +212,22 @@ function Page() {
                                                         </FormControl>
                                                         <FormDescription>
                                                             Please enter your area's pincode.
+                                                        </FormDescription>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="mobileNo"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Mobile Number</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Enter your mobile number" {...field} />
+                                                        </FormControl>
+                                                        <FormDescription>
+                                                            Please enter your mobile number.
                                                         </FormDescription>
                                                         <FormMessage />
                                                     </FormItem>

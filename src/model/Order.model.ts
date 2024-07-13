@@ -1,28 +1,49 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface Order extends Document {
-    itemId: string;
-    orderItem: string;
+    items: {
+        itemId: mongoose.Schema.Types.ObjectId;
+        quantity: number;
+        itemPrice: number;
+        shippingPrice: number;
+        totalPrice: number;
+    }[];
     shippingAddress: string;
     paymentMethod: string;
-    itemPrice: number;
-    shippingPrice: number;
     totalPrice: number;
     orderStatus: string;
     paidAt: Date;
     deliveredAt?: Date;
-    user: mongoose.Schema.Types.ObjectId;
+    orderBy: mongoose.Schema.Types.ObjectId;
 }
 
-const OrderSchema: Schema<Order> = new mongoose.Schema({
+const ItemSchema: Schema = new mongoose.Schema({
     itemId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
         required: true,
     },
-    orderItem: {
-        type: String,
+    quantity: {
+        type: Number,
+        required: true,
+        default: 1,
+    },
+    itemPrice: {
+        type: Number,
         required: true,
     },
+    shippingPrice: {
+        type: Number,
+        default: 50.00,
+    },
+    totalPrice: {
+        type: Number,
+        required: true,
+    },
+});
+
+const OrderSchema: Schema<Order> = new mongoose.Schema({
+    items: [ItemSchema],
     shippingAddress: {
         type: String,
         required: true,
@@ -31,38 +52,39 @@ const OrderSchema: Schema<Order> = new mongoose.Schema({
         type: String,
         required: true,
     },
-    itemPrice: {
-        type: Number,
-        required: true,
-    },
-    shippingPrice: {
-        type: Number,
-        required: true,
-    },
     totalPrice: {
         type: Number,
-        required: true,
+        default: 0,
     },
     orderStatus: {
         type: String,
-        required: true,
         default: "Pending",
     },
     paidAt: {
         type: Date,
-        required: true,
+
     },
     deliveredAt: {
         type: Date,
     },
-    user: {
+    orderBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
 });
 
-const OrderModel = mongoose.models.Order as mongoose.Model<Order>
-    || mongoose.model<Order>("Order", OrderSchema);
+// Middleware to calculate total price for each item before saving the order
+OrderSchema.pre('save', function (next) {
+    this.items.forEach(item => {
+        item.totalPrice = item.itemPrice * item.quantity + item.shippingPrice;
+    });
+
+    // Calculate total price for the entire order
+    this.totalPrice = this.items.reduce((acc, item) => acc + item.totalPrice, 0);
+    next();
+});
+
+const OrderModel = mongoose.models.Order as mongoose.Model<Order> || mongoose.model<Order>("Order", OrderSchema);
 
 export default OrderModel;
